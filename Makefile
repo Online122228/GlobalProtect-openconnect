@@ -1,8 +1,6 @@
 .SHELLFLAGS += -e
 
 OFFLINE ?= 0
-BUILD_FE ?= 1
-INCLUDE_GUI ?= 0
 CARGO ?= cargo
 DISABLE_RUST_TOOLCHAIN ?= 0
 
@@ -11,7 +9,7 @@ REVISION ?= 1
 RPM_SOURCE ?= %{name}.tar.gz
 
 PPA_REVISION ?= 1
-PKG_NAME = globalprotect-openconnect
+PKG_NAME = globalprotect-openconnect-cli
 PKG = $(PKG_NAME)-$(VERSION)
 SERIES ?= $(shell lsb_release -cs)
 PUBLISH ?= 0
@@ -19,8 +17,8 @@ PUBLISH ?= 0
 # Indicates whether to build the GUI components
 BUILD_GUI ?= 1
 
-export DEBEMAIL = k3vinyue@gmail.com
-export DEBFULLNAME = Kevin Yue
+export DEBEMAIL = leartdukaj@mail.de
+export DEBFULLNAME = Leart Dukaj
 export SNAPSHOT = $(shell test -f SNAPSHOT && echo "true" || echo "false")
 
 ifeq ($(SNAPSHOT), true)
@@ -48,14 +46,8 @@ clean-tarball:
 
 # Create a tarball, include the cargo dependencies if OFFLINE is set to 1
 tarball: clean-tarball
-	if [ $(BUILD_GUI) -eq 1 ] && [ $(BUILD_FE) -eq 1 ]; then \
-		echo "Building frontend..."; \
-		cd apps/gpgui-helper && pnpm install && pnpm build; \
-	fi
 
 	# Remove node_modules to reduce the tarball size
-	rm -rf apps/gpgui-helper/node_modules
-
 	mkdir -p .cargo
 	mkdir -p .build/tarball
 
@@ -68,36 +60,9 @@ tarball: clean-tarball
 	@echo "Creating tarball..."
 	tar --exclude .vendor --exclude target --transform 's,^,${PKG}/,' -czf .build/tarball/${PKG}.tar.gz * .cargo
 
-download-gui:
-	rm -rf .build/gpgui
 
-	if [ $(INCLUDE_GUI) -eq 1 ]; then \
-		echo "Downloading GlobalProtect GUI..."; \
-		mkdir -p .build/gpgui; \
-		curl -sSL https://github.com/yuezk/GlobalProtect-openconnect/releases/download/$(RELEASE_TAG)/gpgui_$(shell uname -m).bin.tar.xz \
-			-o .build/gpgui/gpgui_$(shell uname -m).bin.tar.xz; \
-		tar -xJf .build/gpgui/*.tar.xz -C .build/gpgui; \
-	else \
-		echo "Skipping GlobalProtect GUI download (INCLUDE_GUI=0)"; \
-	fi
 
-build: download-gui build-fe build-rs
-
-# Install and build the frontend
-# If OFFLINE is set to 1, skip it
-build-fe:
-	if [ $(BUILD_GUI) -eq 0 ] || [ $(OFFLINE) -eq 1 ] || [ $(BUILD_FE) -eq 0 ]; then \
-		echo "Skipping frontend build (BUILD_GUI=0 or OFFLINE=1 or BUILD_FE=0)"; \
-	else \
-		cd apps/gpgui-helper && pnpm install && pnpm build; \
-	fi
-
-	if [ $(BUILD_GUI) -eq 1 ] && [ ! -d apps/gpgui-helper/dist ]; then \
-		echo "Error: frontend build failed"; \
-		exit 1; \
-	fi
-
-build-rs:
+build:
 	if [ $(OFFLINE) -eq 1 ]; then \
 		tar -xJf vendor.tar.xz; \
 	fi
@@ -107,18 +72,12 @@ build-rs:
 		rm -vf rust-toolchain.toml; \
 	fi
 
-	# Only build the GUI components if BUILD_GUI is set to 1
-	if [ $(BUILD_GUI) -eq 1 ]; then \
-		$(CARGO) build $(CARGO_BUILD_ARGS) -p gpclient -p gpservice -p gpauth -p gpgui-helper; \
-	else \
-		$(CARGO) build $(CARGO_BUILD_ARGS) -p gpclient -p gpservice -p gpauth; \
-	fi
+	$(CARGO) build $(CARGO_BUILD_ARGS) -p gpclient -p gpservice -p gpauth; \
 
 clean:
 	$(CARGO) clean
 	rm -rf .build
 	rm -rf .vendor
-	rm -rf apps/gpgui-helper/node_modules
 
 install:
 	@echo "Installing $(PKG_NAME)..."
@@ -127,15 +86,6 @@ install:
 	install -Dm755 target/release/gpauth $(DESTDIR)/usr/bin/gpauth
 	install -Dm755 target/release/gpservice $(DESTDIR)/usr/bin/gpservice
 
-	# Install the GUI components if BUILD_GUI is set to 1
-	if [ $(BUILD_GUI) -eq 1 ]; then \
-		install -Dm755 target/release/gpgui-helper $(DESTDIR)/usr/bin/gpgui-helper; \
-	fi
-
-	if [ -f .build/gpgui/gpgui_*/gpgui ]; then \
-		install -Dm755 .build/gpgui/gpgui_*/gpgui $(DESTDIR)/usr/bin/gpgui; \
-	fi
-
 	# Install the HIP report script
 	install -Dm755 packaging/files/usr/libexec/gpclient/hipreport.sh $(DESTDIR)/usr/libexec/gpclient/hipreport.sh
 
@@ -143,34 +93,17 @@ install:
 	install -Dm755 packaging/files/usr/lib/NetworkManager/dispatcher.d/pre-down.d/gpclient.down $(DESTDIR)/usr/lib/NetworkManager/dispatcher.d/pre-down.d/gpclient.down
 	install -Dm755 packaging/files/usr/lib/NetworkManager/dispatcher.d/gpclient-nm-hook $(DESTDIR)/usr/lib/NetworkManager/dispatcher.d/gpclient-nm-hook
 
-	install -Dm644 packaging/files/usr/share/applications/gpgui.desktop $(DESTDIR)/usr/share/applications/gpgui.desktop
-	install -Dm644 packaging/files/usr/share/icons/hicolor/scalable/apps/gpgui.svg $(DESTDIR)/usr/share/icons/hicolor/scalable/apps/gpgui.svg
-	install -Dm644 packaging/files/usr/share/icons/hicolor/32x32/apps/gpgui.png $(DESTDIR)/usr/share/icons/hicolor/32x32/apps/gpgui.png
-	install -Dm644 packaging/files/usr/share/icons/hicolor/128x128/apps/gpgui.png $(DESTDIR)/usr/share/icons/hicolor/128x128/apps/gpgui.png
-	install -Dm644 packaging/files/usr/share/icons/hicolor/256x256@2/apps/gpgui.png $(DESTDIR)/usr/share/icons/hicolor/256x256@2/apps/gpgui.png
-	install -Dm644 packaging/files/usr/share/polkit-1/actions/com.yuezk.gpgui.policy $(DESTDIR)/usr/share/polkit-1/actions/com.yuezk.gpgui.policy
-
 uninstall:
 	@echo "Uninstalling $(PKG_NAME)..."
 
 	rm -f $(DESTDIR)/usr/bin/gpclient
 	rm -f $(DESTDIR)/usr/bin/gpauth
 	rm -f $(DESTDIR)/usr/bin/gpservice
-	rm -f $(DESTDIR)/usr/bin/gpgui-helper
-	rm -f $(DESTDIR)/usr/bin/gpgui
 
 	rm -f $(DESTDIR)/usr/libexec/gpclient/hipreport.sh
 
 	rm -f $(DESTDIR)/usr/lib/NetworkManager/dispatcher.d/pre-down.d/gpclient.down
 	rm -f $(DESTDIR)/usr/lib/NetworkManager/dispatcher.d/gpclient-nm-hook
-
-	rm -f $(DESTDIR)/usr/share/applications/gpgui.desktop
-	rm -f $(DESTDIR)/usr/share/icons/hicolor/scalable/apps/gpgui.svg
-	rm -f $(DESTDIR)/usr/share/icons/hicolor/32x32/apps/gpgui.png
-	rm -f $(DESTDIR)/usr/share/icons/hicolor/128x128/apps/gpgui.png
-	rm -f $(DESTDIR)/usr/share/icons/hicolor/256x256@2/apps/gpgui.png
-	rm -f $(DESTDIR)/usr/share/polkit-1/actions/com.yuezk.gpgui.policy
-
 clean-debian:
 	rm -rf .build/deb
 
@@ -193,7 +126,6 @@ init-debian: clean-debian tarball
 	# Remove the GUI dependencies if BUILD_GUI is set to 0
 	if [ $(BUILD_GUI) -eq 0 ]; then \
 		sed -i "/libsecret-1-0/d" .build/deb/$(PKG)/debian/control; \
-		sed -i "/libayatana-appindicator3-1/d" .build/deb/$(PKG)/debian/control; \
 		sed -i "/gnome-keyring/d" .build/deb/$(PKG)/debian/control; \
 		sed -i "/libwebkit2gtk-4.1-dev/d" .build/deb/$(PKG)/debian/control; \
 	fi
@@ -224,7 +156,7 @@ ppa: check-ppa init-debian
 	cd .build/deb/$(PKG) && echo "y" | debuild -e PATH -S -sa -k"$(GPG_KEY_ID)" -p"gpg --batch --passphrase $(GPG_KEY_PASS) --pinentry-mode loopback"
 
 	if [ $(PUBLISH) -eq 1 ]; then \
-		cd .build/deb/$(PKG) && dput ppa:yuezk/globalprotect-openconnect ../*.changes; \
+		cd .build/deb/$(PKG) && dput ppa:Online122228/globalprotect-openconnect ../*.changes; \
 	else \
 		echo "Skipping ppa publish (PUBLISH=0)"; \
 	fi

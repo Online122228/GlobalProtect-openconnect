@@ -1,4 +1,5 @@
-# Maintainer: Keinv Yue <k3vinyue@gmail.com>
+# Maintainer: Leart Dukaj <leartdukaj@mail.de>
+# Contributor: Keinv Yue <k3vinyue@gmail.com>
 
 _pkgname=@PKG_NAME@
 pkgname=${_pkgname}
@@ -6,15 +7,15 @@ pkgver="@VERSION@"
 pkgrel=@REVISION@
 pkgdesc="A GUI client for GlobalProtect VPN, based on OpenConnect, supports the SSO authentication method."
 arch=('x86_64' 'aarch64')
-url="https://github.com/yuezk/GlobalProtect-openconnect"
+url="https://github.com/Online122228/GlobalProtect-openconnect"
 license=('GPL3')
 makedepends=('make' 'pkg-config' 'cargo' 'file')
-depends=('webkit2gtk-4.1' 'libappindicator-gtk3' 'librsvg' 'libsecret' 'openssl' 'appmenu-gtk-module'
+depends=('webkit2gtk-4.1' 'librsvg' 'libsecret' 'openssl' 'appmenu-gtk-module'
          'gnutls' 'libxml2' 'vpnc' 'lz4' 'libp11-kit' 'nettle' 'xdg-utils'
          'openconnect>=8.20')
 optdepends=('wmctrl: for window management')
 
-provides=('globalprotect-openconnect' 'gpclient' 'gpservice' 'gpauth' 'gpgui')
+provides=('globalprotect-openconnect' 'gpclient' 'gpservice' 'gpauth')
 
 source=("${_pkgname}-${pkgver}.tar.gz")
 sha256sums=('SKIP')

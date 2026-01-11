@@ -34,14 +34,14 @@
         };
 
         src = pkgs.fetchzip {
-          url = "https://github.com/yuezk/GlobalProtect-openconnect/releases/download/v${version}/globalprotect-openconnect-${version}.tar.gz";
+          url = "https://github.com/Online122228/GlobalProtect-openconnect/releases/download/v${version}/globalprotect-openconnect-${version}.tar.gz";
           hash = "sha256-4hlWP7yvwk4rTvQWuh60D40DJ20GfHhLTYA5+dkc4Hc=";
         };
 
         cpu = pkgs.stdenv.hostPlatform.parsed.cpu.name;
 
         gpgui = pkgs.fetchzip {
-          url = "https://github.com/yuezk/GlobalProtect-openconnect/releases/download/v${version}/gpgui_${cpu}.bin.tar.xz";
+          url = "https://github.com/Online122228/GlobalProtect-openconnect/releases/download/v${version}/gpgui_${cpu}.bin.tar.xz";
           hash = {
             x86_64 = "sha256-SayWyWJBDoIgqQG/z7v4FEr0uYHNZDJHokHPYqIgrJ0=";
             aarch64 = "sha256-Q8yJW2ecv6zsuzzpfVAjSaDhLHQQJyVGFzZuLl0RV8Q=";
@@ -133,7 +133,7 @@
               --replace-fail /usr/bin/gpclient $out/bin/gpclient
 
             # Change the `/usr/bin/gpservice` path in the polkit policy file
-            substituteInPlace $out/share/polkit-1/actions/com.yuezk.gpgui.policy \
+            substituteInPlace $out/share/polkit-1/actions/com.Online122228.gpgui.policy \
               --replace-fail /usr/bin/gpservice $out/bin/gpservice
 
           '';

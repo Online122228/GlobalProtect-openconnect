@@ -6,14 +6,13 @@ members = [
   "apps/gpclient",
   "apps/gpservice",
   "apps/gpauth",
-  "apps/gpgui-helper/src-tauri",
 ]
 
 [workspace.package]
 rust-version = "1.85"
 version = "2.5.1"
-authors = ["Kevin Yue <k3vinyue@gmail.com>"]
-homepage = "https://github.com/yuezk/GlobalProtect-openconnect"
+authors = ["Leart Dukaj"]
+homepage = "https://github.com/Online122228/GlobalProtect-openconnect"
 edition = "2024"
 license = "GPL-3.0"
 
