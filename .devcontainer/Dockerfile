@@ -32,7 +32,6 @@ RUN set -eux; \
     build-essential \
     libxdo-dev \
     libssl-dev \
-    libayatana-appindicator3-dev \
     librsvg2-dev; \
   # Clean up apt cache to reduce image size
   apt-get clean; \

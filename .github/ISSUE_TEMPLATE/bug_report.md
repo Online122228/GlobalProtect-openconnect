@@ -17,8 +17,7 @@ A clear and concise description of what you expected to happen.
 If applicable, add screenshots to help explain your problem.
 
 **Logs**
-- For the GUI version, you can find the logs at `~/.local/share/gpclient/gpclient.log`
-- For the CLI version, copy the output of the `gpclient` command.
+- Copy the output of the `gpclient` command.
 
 **Environment:**
  - OS: [e.g. Ubuntu 22.04]
