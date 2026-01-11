@@ -1,10 +1,6 @@
 # GlobalProtect-openconnect
 
-A modern GlobalProtect VPN client for Linux, built on OpenConnect with full support for SSO authentication. This project provides both command-line and graphical interfaces for seamless VPN connectivity.
-
-<p align="center">
-  <img width="300" src="https://github.com/user-attachments/assets/2fb6116c-dc57-43f2-af75-9c3d97ab7122">
-</p>
+A modern GlobalProtect VPN client for Linux, built on OpenConnect with full support for SSO authentication. This project provides only a command-line interface for seamless VPN connectivity.
 
 > **Inspired by** [gp-saml-gui](https://github.com/dlenski/gp-saml-gui)
 
@@ -30,13 +26,11 @@ A modern GlobalProtect VPN client for Linux, built on OpenConnect with full supp
 ## Features
 
 - **Cross-Platform Linux Support** – Optimized for various Linux distributions
-- **Dual Interface** – Available as both CLI and GUI applications
 - **Flexible Authentication** – Supports SSO, non-SSO, FIDO2 (e.g., YubiKey), and client certificate authentication
 - **Browser Integration** – Authenticate using your default browser or any specified browser
 - **Multi-Portal Support** – Connect to multiple portals and gateways
 - **Direct Gateway Connection** – Bypass portal selection when needed
 - **Auto-Connect** – Automatically connect on system startup
-- **System Tray Integration** – Convenient system tray icon (requires [gnome-shell-extension-appindicator](https://extensions.gnome.org/extension/615/appindicator-support/) on GNOME)
 
 ## Usage
 
@@ -90,10 +84,6 @@ The GUI application provides an intuitive interface for managing VPN connections
 gpclient launch-gui
 ```
 
-> [!Note]
->
-> The GUI version is partially open source. The background service ([gpservice](./apps/gpservice/)) is open source, while the GUI wrapper is proprietary.
-
 ## Installation
 
 ### Debian / Ubuntu
@@ -115,7 +105,7 @@ sudo apt-get install globalprotect-openconnect
 
 #### Option 2: Install from DEB Package
 
-Download the latest `.deb` package from the [releases](https://github.com/yuezk/GlobalProtect-openconnect/releases) page, then install:
+Download the latest `.deb` package from the [releases](https://github.com/Online122228/GlobalProtect-openconnect/releases) page, then install:
 
 ```bash
 sudo apt install --fix-broken globalprotect-openconnect_*.deb
@@ -125,7 +115,7 @@ sudo apt install --fix-broken globalprotect-openconnect_*.deb
 
 #### Option 1: Install from AUR
 
-Package: [globalprotect-openconnect-git](https://aur.archlinux.org/packages/globalprotect-openconnect-git/)
+Package: [globalprotect-openconnect-git](https://aur.archlinux.org/packages/globalprotect-openconnect-cli-git/)
 
 You can install it using an AUR helper like [`yay`](https://github.com/Jguer/yay):
 
@@ -133,63 +123,22 @@ You can install it using an AUR helper like [`yay`](https://github.com/Jguer/yay
 yay -S globalprotect-openconnect-git
 ```
 
-#### Option 2: Install from the Official Extra Repository
+#### Option 2: Install from Package
 
-The package is also available in the official Arch Linux Extra repository.
-
-Package: [globalprotect-openconnect](https://archlinux.org/packages/extra/x86_64/globalprotect-openconnect/)
-
-> [!Note]
->
-> Since the official package does not include the system tray support dependency, you need to install `libappindicator` manually:
-
-```bash
-sudo pacman -S libappindicator globalprotect-openconnect
-```
-
-#### Option 3: Install from Package
-
-Download the latest package from the [releases](https://github.com/yuezk/GlobalProtect-openconnect/releases) page, then install:
+Download the latest package from the [releases](https://github.com/Online122228/GlobalProtect-openconnect/releases) page, then install:
 
 ```bash
 sudo pacman -U globalprotect-openconnect-*.pkg.tar.zst
 ```
 
-### Fedora 38+ / Rawhide
-
-#### Install from COPR
-
-The package is available on [COPR](https://copr.fedorainfracloud.org/coprs/yuezk/globalprotect-openconnect/) for RPM-based distributions:
-
-```bash
-sudo dnf copr enable yuezk/globalprotect-openconnect
-sudo dnf install globalprotect-openconnect
-```
-
-### openSUSE Leap 15.6+ / Tumbleweed
-
-#### Install from OBS (openSUSE Build Service)
-
-Packages are available on the [openSUSE Build Service](https://build.opensuse.org/package/show/home:yuezk/globalprotect-openconnect). Follow the [installation instructions](https://software.opensuse.org//download.html?project=home%3Ayuezk&package=globalprotect-openconnect) for your distribution.
-
-### Other RPM-based Distributions
+### RPM-based Distributions
 
 #### Install from RPM Package
 
-Download the latest RPM package from the [releases](https://github.com/yuezk/GlobalProtect-openconnect/releases) page:
+Download the latest RPM package from the [releases](https://github.com/Online122228/GlobalProtect-openconnect/releases) page:
 
 ```bash
 sudo rpm -i globalprotect-openconnect-*.rpm
-```
-
-### Gentoo
-
-Available via the `guru` and `lamdness` overlays:
-
-```bash
-sudo eselect repository enable guru
-sudo emerge --sync guru
-sudo emerge --ask --verbose net-vpn/GlobalProtect-openconnect
 ```
 
 ### NixOS
@@ -204,7 +153,7 @@ This repository includes a flake for NixOS integration.
     {
       inputs = {
         # ... other inputs
-        globalprotect-openconnect.url = "github:yuezk/GlobalProtect-openconnect";
+        globalprotect-openconnect.url = "github:Online122228/GlobalProtect-openconnect";
       };
 
       outputs = { nixpkgs, ... }@inputs: {
@@ -246,10 +195,9 @@ This repository includes a flake for NixOS integration.
 1. **Install dependencies:**
    - `webkit2gtk`
    - `libsecret`
-   - `libayatana-appindicator` or `libappindicator-gtk3`
 
 2. **Download and extract:**
-   Download `globalprotect-openconnect_${version}_${arch}.bin.tar.xz` from the [releases](https://github.com/yuezk/GlobalProtect-openconnect/releases) page:
+   Download `globalprotect-openconnect_${version}_${arch}.bin.tar.xz` from the [releases](https://github.com/Online122228/GlobalProtect-openconnect/releases) page:
    ```bash
    tar -xJf globalprotect-openconnect_${version}_${arch}.bin.tar.xz
    ```
@@ -351,7 +299,6 @@ Verify the CLI client is working correctly:
 
 ### Build Options
 
-- `BUILD_GUI=0` – Build CLI components only (excludes GUI)
 - `BUILD_FE=0` – Skip frontend build (uses pre-built assets)
 - `OFFLINE=1` – Build in offline mode using vendored dependencies
 
@@ -380,7 +327,6 @@ See related issue: [#316](https://github.com/yuezk/GlobalProtect-openconnect/iss
 ### Trial and Pricing
 
 The **CLI version** is completely free and open source.
-The **GUI version** is a paid application with a **10-day trial period** after installation.
 
 ### Open Source Licenses
 
