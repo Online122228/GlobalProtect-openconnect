@@ -49,7 +49,7 @@ jobs:
       env:
         GH_TOKEN: ${{ secrets.GH_PAT }}
       run: |
-        gh -R yuezk/GlobalProtect-openconnect \
+        gh -R Online122228/GlobalProtect-openconnect \
           release download ${{ inputs.tag }} \
           --pattern '*.offline.tar.gz' \
           --dir publish-ppa
@@ -83,16 +83,16 @@ jobs:
         sed -i "s/DISABLE_RUST_TOOLCHAIN = 0/DISABLE_RUST_TOOLCHAIN = 1/g" .build/debian/rules
 
     - name: Publish to PPA
-      uses: yuezk/publish-ppa-package@gp
+      uses: Online122228/publish-ppa-package@gp
       with:
-        repository: "yuezk/globalprotect-openconnect"
+        repository: "Online122228/globalprotect-openconnect"
         gpg_private_key: ${{ secrets.PPA_GPG_PRIVATE_KEY }}
         gpg_passphrase: ${{ secrets.PPA_GPG_PASSPHRASE }}
         tarball: publish-ppa/globalprotect-openconnect-*.tar.gz
         debian_dir: publish-ppa/globalprotect-openconnect-*/.build/debian
-        deb_email: "k3vinyue@gmail.com"
-        deb_fullname: "Kevin Yue"
-        extra_ppa: "yuezk/globalprotect-openconnect"
+        deb_email: "leartdukaj@mail.de"
+        deb_fullname: "leart Dukaj"
+        extra_ppa: "Online122228/globalprotect-openconnect"
         # Ubuntu 18.04 and 20.04 are excluded because tauri2 no longer supports them
         excluded_series: "bionic focal"
         series: ${{ inputs.series }}

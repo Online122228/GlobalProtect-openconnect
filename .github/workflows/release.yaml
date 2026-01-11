@@ -101,7 +101,7 @@ jobs:
       env:
         GH_TOKEN: ${{ secrets.GH_PAT }}
       run: |
-        gh -R yuezk/GlobalProtect-openconnect \
+        gh -R Online122228/GlobalProtect-openconnect \
           release download ${{ inputs.tag }} \
           --pattern '*[^offline].tar.gz' \
           --dir build-${{ matrix.package }}
@@ -116,14 +116,14 @@ jobs:
           -e COREPACK_INTEGRITY_KEYS=0 \
           -e LIBXML2_STATIC=1 \
           -e INCLUDE_GUI=1 \
-          yuezk/gpdev:${{ matrix.package }}-builder-tauri2
+          Online122228/gpdev:${{ matrix.package }}-builder-tauri2
 
     - name: Install ${{ matrix.package }} package in Docker
       run: |
         docker run --pull=always --rm \
           -e COREPACK_INTEGRITY_KEYS=0 \
           -v $(pwd)/build-${{ matrix.package }}:/workspace \
-          yuezk/gpdev:${{ matrix.package }}-builder-tauri2 \
+          Online122228/gpdev:${{ matrix.package }}-builder-tauri2 \
           bash install.sh
 
     - name: Upload ${{ matrix.package }} package
