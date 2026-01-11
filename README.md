@@ -8,15 +8,10 @@ A modern GlobalProtect VPN client for Linux, built on OpenConnect with full supp
 
 - [Features](#features)
 - [Usage](#usage)
-  - [Command-Line Interface](#command-line-interface)
-  - [Graphical User Interface](#graphical-user-interface)
 - [Installation](#installation)
   - [Debian / Ubuntu](#debian--ubuntu)
   - [Arch Linux / Manjaro](#arch-linux--manjaro)
-  - [Fedora 38+ / Rawhide](#fedora-38--rawhide)
-  - [openSUSE Leap 15.6+ / Tumbleweed](#opensuse-leap-156--tumbleweed)
-  - [Other RPM-based Distributions](#other-rpm-based-distributions)
-  - [Gentoo](#gentoo)
+  - [RPM-based Distributions](#rpm-based-distributions)
   - [NixOS](#nixos)
   - [Other Distributions](#other-distributions)
 - [Building from Source](#building-from-source)
@@ -33,8 +28,6 @@ A modern GlobalProtect VPN client for Linux, built on OpenConnect with full supp
 - **Auto-Connect** – Automatically connect on system startup
 
 ## Usage
-
-### Command-Line Interface
 
 The CLI version is fully open source and feature-rich, providing nearly identical functionality to the GUI version.
 
@@ -76,14 +69,6 @@ gpauth <portal> --browser 2>/dev/null | sudo gpclient connect <portal> --cookie-
 - Use `--browser <browser>` to specify a browser (e.g., `firefox`, `chrome`)
 - Use `--browser remote` for headless servers – this provides a URL you can access from another machine to complete authentication
 
-### Graphical User Interface
-
-The GUI application provides an intuitive interface for managing VPN connections. Launch it from your application menu or via the terminal:
-
-```bash
-gpclient launch-gui
-```
-
 ## Installation
 
 ### Debian / Ubuntu
@@ -91,9 +76,9 @@ gpclient launch-gui
 #### Option 1: Install from PPA (Recommended)
 
 ```bash
-sudo add-apt-repository ppa:yuezk/globalprotect-openconnect
+sudo add-apt-repository ppa:Online122228/globalprotect-openconnect-cli
 sudo apt-get update
-sudo apt-get install globalprotect-openconnect
+sudo apt-get install globalprotect-openconnect-cli
 ```
 
 > [!Note]
